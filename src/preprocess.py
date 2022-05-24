@@ -1,3 +1,4 @@
+from pydoc import describe
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import config
@@ -8,9 +9,12 @@ def main():
     availabilty(df)
     #society_encoded(df)
     area_type_encoded(df)
+    size_cleaned(df)
     df.to_csv("./Input/preprocessed_data.csv")
-    df = df.drop(["area_type", "availability", "bath", "balcony"], axis=1)
+    df = df.drop(["area_type", "availability", "bath", "balcony", "size"], axis=1)
     print(df.head(20))
+    print(df["location"].describe())
+    print(df["society"].describe())
     #print("Data has been preprocessed and converted to a csv file")
     #print (df["society"].value_counts())
 
@@ -23,7 +27,7 @@ def fill_vals(df, column_1 = "balcony", column_2 = "bath"):
     df[column_2] = df[column_2].astype(int)
     df["bath_processed"] =  df[column_2]
     df["balcony_processed"] = df[column_1]
-    df.dropna(subset=["society"], inplace=True)
+    df.dropna(subset=["society", "size"], inplace=True)
     return df
 
 #Processing availability into three labels 0, 1, 2
@@ -42,7 +46,12 @@ def availabilty(df, column = "availability"):
 def area_type_encoded(df, column = "area_type"):  
     LE = LabelEncoder()
     df["area_type_encoded"] = LE.fit_transform(df[column])
-    return df     
+    return df   
+#BHK means Bedroom, Hall and Kitchen and the number preceding BHK means the number of bedrooms
+def size_cleaned(df, column="size"):
+    df[column] = df[column].apply(lambda x:str(x).split(' ')[0])
+    df[column] = df[column].astype(int)
+    df["size_cleaned"] = df[column]
 
 #def 
 if __name__ == "__main__":
