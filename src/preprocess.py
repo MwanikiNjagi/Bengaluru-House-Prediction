@@ -1,4 +1,3 @@
-from pydoc import describe
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import config
