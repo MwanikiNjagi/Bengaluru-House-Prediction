@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import config
+import numpy as np
 
 def main():
     df = pd.read_csv(config.TRAINING_FILE)
@@ -9,9 +10,13 @@ def main():
     #society_encoded(df)
     area_type_encoded(df)
     size_cleaned(df)
-    df.to_csv("./Input/preprocessed_data.csv")
+    total_sqft_cleaned(df)
     df = df.drop(["area_type", "availability", "bath", "balcony", "size"], axis=1)
+    df = df.dropna()#Removes all NaN values to reduce training errors
+    df.to_csv("./Input/preprocessed_data.csv", index=False) #Removes indices
     print(df.head(20))
+    print(df.columns)
+    print(df.dtypes)
     print(df["location"].describe())
     print(df["society"].describe())
     #print("Data has been preprocessed and converted to a csv file")
@@ -40,7 +45,6 @@ def availabilty(df, column = "availability"):
     df["availability_encoded"] =  df[column]
     return df
 
-#def society_encoded(df, column="society"):
 
 def area_type_encoded(df, column = "area_type"):  
     LE = LabelEncoder()
@@ -52,7 +56,13 @@ def size_cleaned(df, column="size"):
     df[column] = df[column].astype(int)
     df["size_cleaned"] = df[column]
 
-#def 
+def total_sqft_cleaned(df, column = "total_sqft"):
+    df[column] = df[column].apply(lambda x:x.split('-')[0])
+    df[column] = df[column].apply(lambda x:x.replace("15Acres", ""))
+    df[column]= pd.to_numeric(df[column], errors = "coerce").dropna()#Drops Sq.Meters and Sq.Yards
+    df[column] =  df[column].astype(float)
+    
+
 if __name__ == "__main__":
     main()
    
