@@ -1,3 +1,5 @@
 TRAINING_FILE = "./Input/Train.csv"
 TEST_FILE = "./Input/Test.csv"
 MODEL_OUTPUT = "/models/"
+PREPROCESSED_FILE = "./Input/preprocessed_train_data.csv"
+PREPROCESSED_TEST_FILE = "./Input/preprocessed_test_data.csv"
