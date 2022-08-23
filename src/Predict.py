@@ -1,6 +1,5 @@
 import numpy as np
 import config
-from __main__ import *
 import preprocess
 import pandas as pd
 from catboost import CatBoostRegressor
